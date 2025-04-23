@@ -28,17 +28,21 @@ export class BookService {
     const books = await this.bookRepo.find();
     return books.map((book) => ({
       ...book,
-      imagem: book.imagem ? book.imagem.toString('base64') : null,
+      imagem: book.imagem
+        ? `data:image/png;base64,${book.imagem.toString('base64')}`
+        : null,
     }));
   }
-
+  
   async findOne(id: number) {
     const book = await this.bookRepo.findOneBy({ id });
     if (!book) return null;
   
     return {
       ...book,
-      imagem: book.imagem ? book.imagem.toString('base64') : null,
+      imagem: book.imagem
+        ? `data:image/png;base64,${book.imagem.toString('base64')}`
+        : null,
     };
   }
 
