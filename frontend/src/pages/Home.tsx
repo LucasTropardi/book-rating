@@ -47,7 +47,6 @@ export default function Home() {
           nome={selectedBook.titulo}
           autor={selectedBook.autor}
           anoLancamento={selectedBook.anoLancamento}
-          paginas={selectedBook.paginas}
           sinopse={selectedBook.sinopse}
         />
       )}
