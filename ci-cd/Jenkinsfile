@@ -1,0 +1,65 @@
+pipeline {
+  agent any
+
+  environment {
+    MAVEN_OPTS = "-Dmaven.repo.local=.m2/repository"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git 'https://github.com/LucasTropardi/book-rating.git'
+      }
+    }
+
+    stage('Build Microservices') {
+      parallel {
+        stage('Build auth-service') {
+          steps {
+            dir('auth') {
+              sh './mvnw clean package -DskipTests'
+            }
+          }
+        }
+        stage('Build user-service') {
+          steps {
+            dir('user') {
+              sh './mvnw clean package -DskipTests'
+            }
+          }
+        }
+        stage('Build review-service') {
+          steps {
+            dir('review') {
+              sh './mvnw clean package -DskipTests'
+            }
+          }
+        }
+        stage('Build book-service') {
+          steps {
+            dir('book') {
+              sh 'npm install && npm run build'
+            }
+          }
+        }
+      }
+    }
+
+    stage('Build Frontend') {
+      steps {
+        dir('frontend') {
+          sh 'npm install && npm run build'
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo 'Build concluído com sucesso.'
+    }
+    failure {
+      echo 'Ocorreu um erro no build.'
+    }
+  }
+}
