@@ -6,12 +6,6 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') {
-      steps {
-        git 'https://github.com/LucasTropardi/book-rating.git'
-      }
-    }
-
     stage('Build Microservices') {
       parallel {
         stage('Build auth-service') {
